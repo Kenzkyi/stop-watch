@@ -132,7 +132,7 @@ const formatTimeWithMiliseconds = (time) => {
   let hours = Math.floor(time / 3600000);
   let minutes = Math.floor((time - hours * 3600000) / 60000);
   let seconds = Math.floor((time - minutes * 60000) / 1000);
-  let miliseconds = time % 1000;
+  let miliseconds = setMiliseconds(time);
   return `${hours.toString().padStart(2, "0")}:${minutes
     .toString()
     .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${miliseconds
