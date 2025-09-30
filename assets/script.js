@@ -10,6 +10,7 @@ const LAP_BUTTON = document.getElementById("lapBtn");
 const TIMER_HOLDER = document.getElementById("timer");
 const LAPS_HOLDER = document.getElementById("laps");
 const EXTRA_TIMER = document.getElementById("extraTimer");
+const THEME_SWITCHER = document.getElementById("themeSwitcher");
 
 // Global Variables
 
@@ -18,6 +19,7 @@ let timerId;
 let hasStarted = false;
 let lapIndex = 0;
 let prevLap = 0;
+let isDarkMode = true;
 
 /**
  * Handles the start button click event.
@@ -93,12 +95,14 @@ const handleLaps = () => {
   lapIndex++;
 
   const lap = document.createElement("article");
-  lap.innerHTML = `<h6>${lapIndex
-    .toString()
-    .padStart(2, "0")}<span>+${formatTimeWithMiliseconds(
+  lap.innerHTML = `<h6 style="color: ${
+    isDarkMode ? "white" : "hsl(225, 23%, 24%)"
+  }">${lapIndex.toString().padStart(2, "0")}<span>+${formatTimeWithMiliseconds(
     timer - prevLap
   )}</span></h6> 
-    <h5>${formatTimeWithMiliseconds(timer)}</h5>`;
+    <h5 style="color: ${
+      isDarkMode ? "white" : "hsl(225, 23%, 24%)"
+    }">${formatTimeWithMiliseconds(timer)}</h5>`;
   LAPS_HOLDER.prepend(lap);
   prevLap = timer;
 };
@@ -159,8 +163,45 @@ const setMiliseconds = (time) => {
   return miliseconds;
 };
 
-// Event Listeners for Buttons
+/**
+ * Toggles the theme of the application between dark and light mode.
+ * Updates the theme icons, background colors, and text colors of the application.
+ */
+const toggleTheme = () => {
+  if (isDarkMode) {
+    THEME_SWITCHER.children[0].src = "./assets/images/icon-moon.svg";
+    THEME_SWITCHER.style.backgroundColor = "white";
+    document.body.style.background =
+      "linear-gradient(180deg, #EBF2FC 0%, #EEF8F9 100%)";
+    document.querySelector("h1").style.color = "hsl(225, 23%, 24%)";
+    document.querySelector(".container_time").style.borderColor =
+      "hsl(225, 23%, 24%)";
+    TIMER_HOLDER.style.color = "hsl(225, 23%, 24%)";
+    LAPS_HOLDER.style.backgroundColor = "white";
+    for (let article of LAPS_HOLDER.children) {
+      article.children[0].style.color = "hsl(225, 23%, 24%)";
+      article.children[1].style.color = "hsl(225, 23%, 24%)";
+    }
+    isDarkMode = false;
+  } else {
+    THEME_SWITCHER.children[0].src = "./assets/images/icon-sun.svg";
+    THEME_SWITCHER.style.backgroundColor = "hsl(225, 23%, 24%)";
+    document.body.style.background = "#24232b";
+    document.querySelector("h1").style.color = "white";
+    document.querySelector(".container_time").style.borderColor = "#4ef4dd";
+    TIMER_HOLDER.style.color = "white";
+    LAPS_HOLDER.style.backgroundColor = "#1e1e1e";
+    for (let article of LAPS_HOLDER.children) {
+      article.children[0].style.color = "white";
+      article.children[1].style.color = "white";
+    }
+    isDarkMode = true;
+  }
+};
+
+// Event Listeners for Buttons and Theme Switcher
 START_BUTTON.addEventListener("click", handleStart);
 STOP_BUTTON.addEventListener("click", handleStop);
 RESET_BUTTON.addEventListener("click", handleReset);
 LAP_BUTTON.addEventListener("click", handleLaps);
+THEME_SWITCHER.addEventListener("click", toggleTheme);
